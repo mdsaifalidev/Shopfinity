@@ -18,7 +18,7 @@ import { brands, categories, colors, sizes } from "@/utils/config";
 import { Upload } from "lucide-react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, Suspense, useEffect, useState } from "react";
 
 interface FormState {
   name: string;
@@ -30,7 +30,7 @@ interface FormState {
   stock: string;
 }
 
-function SuperAdminManageProductPage() {
+function SuperAdminManageProductPageContent() {
   const [formState, setFormState] = useState({
     name: "",
     brand: "",
@@ -39,19 +39,19 @@ function SuperAdminManageProductPage() {
     gender: "",
     price: "",
     stock: "",
-  });
+  })
 
-  const [selectedSizes, setSelectSizes] = useState<string[]>([]);
-  const [selectedColors, setSelectColors] = useState<string[]>([]);
-  const [selectedfiles, setSelectFiles] = useState<File[]>([]);
-  const { toast } = useToast();
-  const searchParams = useSearchParams();
-  const getCurrentEditedProductId = searchParams.get("id");
-  const isEditMode = !!getCurrentEditedProductId;
+  const [selectedSizes, setSelectSizes] = useState<string[]>([])
+  const [selectedColors, setSelectColors] = useState<string[]>([])
+  const [selectedfiles, setSelectFiles] = useState<File[]>([])
+  const { toast } = useToast()
+  const searchParams = useSearchParams()
+  const getCurrentEditedProductId = searchParams.get("id")
+  const isEditMode = !!getCurrentEditedProductId
 
-  const router = useRouter();
+  const router = useRouter()
   const { createProduct, updateProduct, getProductById, isLoading, error } =
-    useProductStore();
+    useProductStore()
 
   useEffect(() => {
     if (isEditMode) {
@@ -65,16 +65,16 @@ function SuperAdminManageProductPage() {
             gender: product.gender,
             price: product.price.toString(),
             stock: product.stock.toString(),
-          });
-          setSelectSizes(product.sizes);
-          setSelectColors(product.colors);
+          })
+          setSelectSizes(product.sizes)
+          setSelectColors(product.colors)
         }
-      });
+      })
     }
-  }, [isEditMode, getCurrentEditedProductId, getProductById]);
+  }, [isEditMode, getCurrentEditedProductId, getProductById])
 
   useEffect(() => {
-    console.log(getCurrentEditedProductId, "getCurrentEditedProductId");
+    console.log(getCurrentEditedProductId, "getCurrentEditedProductId")
 
     if (getCurrentEditedProductId === null) {
       setFormState({
@@ -85,11 +85,11 @@ function SuperAdminManageProductPage() {
         gender: "",
         price: "",
         stock: "",
-      });
-      setSelectColors([]);
-      setSelectSizes([]);
+      })
+      setSelectColors([])
+      setSelectSizes([])
     }
-  }, [getCurrentEditedProductId]);
+  }, [getCurrentEditedProductId])
 
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -97,68 +97,68 @@ function SuperAdminManageProductPage() {
     setFormState((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
-    }));
-  };
+    }))
+  }
 
   const handleSelectChange = (name: string, value: string) => {
     setFormState((prev) => ({
       ...prev,
       [name]: value,
-    }));
-  };
+    }))
+  }
 
   const handleToggleSize = (size: string) => {
     setSelectSizes((prev) =>
       prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size]
-    );
-  };
+    )
+  }
 
   const handleToggleColor = (color: string) => {
     setSelectColors((prev) =>
       prev.includes(color) ? prev.filter((s) => s !== color) : [...prev, color]
-    );
-  };
+    )
+  }
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      setSelectFiles(Array.from(event.target.files));
+      setSelectFiles(Array.from(event.target.files))
     }
-  };
+  }
 
   const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    event.preventDefault()
 
-    const checkFirstLevelFormSanitization = await protectProductFormAction();
+    const checkFirstLevelFormSanitization = await protectProductFormAction()
 
     if (!checkFirstLevelFormSanitization.success) {
       toast({
         title: checkFirstLevelFormSanitization.error,
-      });
-      return;
+      })
+      return
     }
 
-    const formData = new FormData();
+    const formData = new FormData()
     Object.entries(formState).forEach(([Key, value]) => {
-      formData.append(Key, value);
-    });
+      formData.append(Key, value)
+    })
 
-    formData.append("sizes", selectedSizes.join(","));
-    formData.append("colors", selectedColors.join(","));
+    formData.append("sizes", selectedSizes.join(","))
+    formData.append("colors", selectedColors.join(","))
 
     if (!isEditMode) {
       selectedfiles.forEach((file) => {
-        formData.append("images", file);
-      });
+        formData.append("images", file)
+      })
     }
 
     const result = isEditMode
       ? await updateProduct(getCurrentEditedProductId, formData)
-      : await createProduct(formData);
-    console.log(result, "result");
+      : await createProduct(formData)
+    console.log(result, "result")
     if (result) {
-      router.push("/super-admin/products/list");
+      router.push("/super-admin/products/list")
     }
-  };
+  }
 
   return (
     <div className="p-6">
@@ -345,7 +345,13 @@ function SuperAdminManageProductPage() {
         </form>
       </div>
     </div>
-  );
+  )
 }
 
-export default SuperAdminManageProductPage;
+export default function SuperAdminManageProductPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SuperAdminManageProductPageContent />
+    </Suspense>
+  )
+}

@@ -69,7 +69,7 @@ function LoginPage() {
           <div className="flex justify-center">
             <Image src={logo} width={200} height={50} alt="Logo" />
           </div>
-          <form className="space-y-4" onSubmit={handleSubmit}>
+          <form className="space-y-4" method="post" onSubmit={handleSubmit}>
             <div className="space-y-1">
               <Label htmlFor="name">Email</Label>
               <Input

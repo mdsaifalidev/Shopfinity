@@ -1,3 +1,4 @@
+import { toast } from "@/hooks/use-toast";
 import { API_ROUTES } from "@/utils/api";
 import axios from "axios";
 import { create } from "zustand";
@@ -47,6 +48,12 @@ export const useAuthStore = create<AuthStore>()(
           set({ isLoading: false });
           return response.data.userId;
         } catch (error) {
+          toast({
+            title: axios.isAxiosError(error)
+              ? error?.response?.data?.error || "Registration failed"
+              : "Registration failed",
+            variant: "destructive",
+          });
           set({
             isLoading: false,
             error: axios.isAxiosError(error)
@@ -69,7 +76,12 @@ export const useAuthStore = create<AuthStore>()(
           set({ isLoading: false, user: response.data.user });
           return true;
         } catch (error) {
-          console.error("Login error:", error);
+          toast({
+            title: axios.isAxiosError(error)
+              ? error?.response?.data?.error || "Login failed"
+              : "Login failed",
+            variant: "destructive",
+          })
           set({
             isLoading: false,
             error: axios.isAxiosError(error)
@@ -86,6 +98,12 @@ export const useAuthStore = create<AuthStore>()(
           await axiosInstance.post("/logout");
           set({ user: null, isLoading: false });
         } catch (error) {
+          toast({
+            title: axios.isAxiosError(error)
+              ? error?.response?.data?.error || "Logout failed"
+              : "Logout failed",
+            variant: "destructive",
+          })
           set({
             isLoading: false,
             error: axios.isAxiosError(error)

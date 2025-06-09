@@ -1,3 +1,4 @@
+import { toast } from "@/hooks/use-toast";
 import { API_ROUTES } from "@/utils/api";
 import axios from "axios";
 import { create } from "zustand";
@@ -81,7 +82,12 @@ export const useSettingsStore = create<SettingsState>((set) => ({
 
       return response.data.success;
     } catch (e) {
-      console.error(e);
+      toast({
+        title: axios.isAxiosError(e)
+          ? e?.response?.data?.error || "Failed to add banners"
+          : "Failed to add banners",
+        variant: "destructive",
+      })
       set({ error: "Failed to fetch banners", isLoading: false });
     }
   },
@@ -100,7 +106,12 @@ export const useSettingsStore = create<SettingsState>((set) => ({
       });
       return response.data.success;
     } catch (e) {
-      console.error(e);
+      toast({
+        title: axios.isAxiosError(e)
+          ? e?.response?.data?.error || "Failed to update featured products"
+          : "Failed to update featured products",
+        variant: "destructive",
+      })
       set({ error: "Failed to fetch banners", isLoading: false });
     }
   },

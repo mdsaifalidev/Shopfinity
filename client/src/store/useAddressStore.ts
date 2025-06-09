@@ -1,3 +1,4 @@
+import { toast } from "@/hooks/use-toast";
 import { API_ROUTES } from "@/utils/api";
 import axios from "axios";
 import { create } from "zustand";
@@ -62,6 +63,10 @@ export const useAddressStore = create<AddressStore>((set, get) => ({
 
       return newAddress;
     } catch (e) {
+      toast({
+        title: "Failed to create address",
+        variant: "destructive",
+      });
       set({ isLoading: false, error: "Failed to fetch address" });
     }
   },
@@ -87,6 +92,10 @@ export const useAddressStore = create<AddressStore>((set, get) => ({
 
       return updatedAddress;
     } catch (e) {
+      toast({
+        title: "Failed to update address",
+        variant: "destructive",
+      });
       set({ isLoading: false, error: "Failed to fetch address" });
     }
   },
@@ -104,6 +113,10 @@ export const useAddressStore = create<AddressStore>((set, get) => ({
 
       return true;
     } catch (e) {
+      toast({
+        title: "Failed to delete address",
+        variant: "destructive",
+      })
       set({ isLoading: false, error: "Failed to fetch address" });
       return false;
     }

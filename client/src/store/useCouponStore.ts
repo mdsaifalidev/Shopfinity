@@ -1,3 +1,4 @@
+import { toast } from "@/hooks/use-toast";
 import { API_ROUTES } from "@/utils/api";
 import axios from "axios";
 import { create } from "zustand";
@@ -51,6 +52,12 @@ export const useCouponStore = create<CouponStore>((set, get) => ({
       set({ isLoading: false });
       return response.data.coupon;
     } catch (e) {
+      toast({
+        title: axios.isAxiosError(e)
+          ? e?.response?.data?.error || "Failed to create coupon"
+          : "Failed to create coupon",
+        variant: "destructive",
+      });
       set({ isLoading: false, error: "Failed to fetch coupons" });
       return null;
     }
@@ -64,6 +71,12 @@ export const useCouponStore = create<CouponStore>((set, get) => ({
       set({ isLoading: false });
       return response.data.success;
     } catch (error) {
+      toast({
+        title: axios.isAxiosError(error)
+          ? error?.response?.data?.error || "Failed to delete coupon"
+          : "Failed to delete coupon",
+        variant: "destructive",
+      })
       set({ isLoading: false, error: "Failed to fetch coupons" });
       return null;
     }

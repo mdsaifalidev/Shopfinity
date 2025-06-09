@@ -1,3 +1,4 @@
+import { toast } from "@/hooks/use-toast";
 import { API_ROUTES } from "@/utils/api";
 import axios from "axios";
 import { create } from "zustand";
@@ -112,6 +113,10 @@ export const useOrderStore = create<OrderStore>((set, get) => ({
       set({ isLoading: false, isPaymentProcessing: false });
       return response.data;
     } catch (error) {
+      toast({
+        title: "Failed to capture PayPal order",
+        variant: "destructive",
+      })
       set({
         error: "Failed to capture paypal order",
         isLoading: false,
@@ -135,6 +140,10 @@ export const useOrderStore = create<OrderStore>((set, get) => ({
       });
       return response.data;
     } catch (error) {
+      toast({
+        title: "Failed to capture PayPal order",
+        variant: "destructive",
+      })
       set({
         error: "Failed to capture paypal order",
         isLoading: false,
@@ -171,6 +180,10 @@ export const useOrderStore = create<OrderStore>((set, get) => ({
       }));
       return true;
     } catch (error) {
+      toast({
+        title: "Failed to capture PayPal order",
+        variant: "destructive",
+      })
       set({ error: "Failed to capture paypal order", isLoading: false });
       return false;
     }

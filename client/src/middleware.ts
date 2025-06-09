@@ -45,7 +45,7 @@ export async function middleware(request: NextRequest) {
     } catch (e) {
       console.error("Token verification failed", e);
       const refreshResponse = await fetch(
-        `${process.env.API_BASE_URL}/api/auth/refresh-token`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/refresh-token`,
         {
           method: "POST",
           credentials: "include",

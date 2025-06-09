@@ -1,3 +1,4 @@
+import { toast } from "@/hooks/use-toast";
 import { API_ROUTES } from "@/utils/api";
 import axios from "axios";
 import { create } from "zustand";
@@ -83,6 +84,12 @@ export const useProductStore = create<ProductState>((set, get) => ({
       set({ isLoading: false });
       return response.data;
     } catch (e) {
+      toast({
+        title: axios.isAxiosError(e)
+          ? e?.response?.data?.error || "Failed to create product"
+          : "Failed to create product",
+        variant: "destructive",
+      })
       set({ error: "Failed to create product", isLoading: false });
     }
   },
@@ -102,6 +109,12 @@ export const useProductStore = create<ProductState>((set, get) => ({
       set({ isLoading: false });
       return response.data;
     } catch (e) {
+      toast({
+        title: axios.isAxiosError(e)
+          ? e?.response?.data?.error || "Failed to create product"
+          : "Failed to create product",
+        variant: "destructive",
+      })
       set({ error: "Failed to create product", isLoading: false });
     }
   },
@@ -114,6 +127,12 @@ export const useProductStore = create<ProductState>((set, get) => ({
       set({ isLoading: false });
       return response.data.success;
     } catch (e) {
+      toast({
+        title: axios.isAxiosError(e)
+          ? e?.response?.data?.error || "Failed to create product"
+          : "Failed to create product",
+        variant: "destructive",
+      })
       set({ error: "Failed to create product", isLoading: false });
     }
   },

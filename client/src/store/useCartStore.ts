@@ -1,3 +1,4 @@
+import { toast } from "@/hooks/use-toast";
 import { API_ROUTES } from "@/utils/api";
 import axios from "axios";
 import debounce from "lodash/debounce";
@@ -74,6 +75,10 @@ export const useCartStore = create<CartStore>((set, get) => {
           isLoading: false,
         }));
       } catch (e) {
+        toast({
+          title: "Failed to add to cart",
+          variant: "destructive",
+        })
         set({ error: "Failed to add to cart", isLoading: false });
       }
     },
@@ -89,6 +94,10 @@ export const useCartStore = create<CartStore>((set, get) => {
           isLoading: false,
         }));
       } catch (e) {
+        toast({
+          title: "Failed to delete from cart",
+          variant: "destructive",
+        })
         set({ error: "Failed to delete from cart", isLoading: false });
       }
     },
@@ -114,6 +123,10 @@ export const useCartStore = create<CartStore>((set, get) => {
 
         set({ items: [], isLoading: false });
       } catch (e) {
+        toast({
+          title: "Failed to clear cart",
+          variant: "destructive",
+        })
         set({ error: "Failed to cart clear ", isLoading: false });
       }
     },

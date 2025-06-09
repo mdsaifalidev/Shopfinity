@@ -6,11 +6,15 @@ const superAdminRoutes = ["/super-admin", "/super-admim/:path*"];
 const userRoutes = ["/home"];
 
 export async function middleware(request: NextRequest) {
+  console.log("Middleware triggered");
   const accessToken = request.cookies.get("accessToken")?.value;
+  console.log("Access Token:", accessToken);
   const { pathname } = request.nextUrl;
 
   if (accessToken) {
+    console.log("Access Token found, verifying...");
     try {
+      console.log("Verifying token...", process.env.JWT_SECRET)
       const { payload } = await jwtVerify(
         accessToken,
         new TextEncoder().encode(process.env.JWT_SECRET)

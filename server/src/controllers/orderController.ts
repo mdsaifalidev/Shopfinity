@@ -3,6 +3,7 @@ import { AuthenticatedRequest } from "../middleware/authMiddleware";
 import { NextFunction, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 import { prisma } from "../server";
+import { PrismaClient } from "@prisma/client/extension";
 
 const PAYPAL_CLIENT_ID =
   "AYYtmQuBVHm_q4fO-nRv84xIKhQk1-BdhSLckYRxcBJLhxI5EcxafPKdkvKpqLDP-pNLNXalxvlUSgZE";
@@ -141,7 +142,7 @@ export const createFinalOrder = async (
 
     //start our transaction
 
-    const order = await prisma.$transaction(async (prisma) => {
+    const order = await prisma.$transaction(async (prisma: PrismaClient) => {
       //create new order
       const newOrder = await prisma.order.create({
         data: {
